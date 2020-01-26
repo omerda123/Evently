@@ -1,11 +1,10 @@
-# {YOUR BOT NAME HERE}
+# Evently
 <https://t.me/{BOT_ID}>
 
 {ONE LINE BOT DESCRIPTION HERE} 
 
-* {Participant 1 Name}
-* {Participant 2 Name}
-* {Participant 3 Name}
+* Omer Daniel
+* Gal Hadad
 
 {OPTIONAL: MORE PROJECT INFO HERE}
 
