@@ -10,13 +10,11 @@ def get_collection(dbname, coll):
 
 
 def add_event(coll, event_id, text):
-    coll.update_one({},
-                    {"$set":
-                         {"id": event_id,
-                          "description": text,
-                          "participants": [],
-                          "items": []
-                          }}, upsert=True)
+    coll.insert_one({"id": event_id,
+                     "description": text,
+                     "participants": [],
+                     "items": []
+                     })
 
 
 def add_items_to_event(coll, event_id, item):
