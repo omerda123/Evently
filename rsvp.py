@@ -5,7 +5,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackContext, MessageHandler, \
     Filters, Updater, CallbackQueryHandler, ConversationHandler
 
-import secret
+import secrets
 COMING_OR_NOT, WHAT_TO_BRING, FINISH = range(3)
 
 logging.basicConfig(
@@ -14,7 +14,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-updater = Updater(token=secret.BOT_TOKEN, use_context=True)
+updater = Updater(token=secrets.BOT_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 info_about_event ="Joe's birthday picnic 2/2/2020, 17:00, Jabotinsky 25 Tel Aviv you can park at Arlozorov parking"
 
@@ -24,7 +24,6 @@ def cancel(update: Update, context: CallbackContext):
 
 
 def start(update: Update, context: CallbackContext):
-    print(context.args)
     keyboard = [[InlineKeyboardButton("not this time", callback_data='0')],
                 [InlineKeyboardButton("1", callback_data='1')],
                 [InlineKeyboardButton("2", callback_data='2')],

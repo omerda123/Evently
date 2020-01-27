@@ -48,7 +48,6 @@ def cancel(args):
 
 
 def event(update: Update, context: CallbackContext):
-    print(context.args)
     chat_id = update.effective_chat.id
     context.bot.send_message(chat_id=chat_id, text=context.args[0])
 
