@@ -39,6 +39,10 @@ def get_last_event(coll, user_id):
     event_id = coll.find_one({"user_id": user_id})
     return event_id["event_id"]
 
+def get_items(coll,event_id):
+    res = coll.find_one({"id": event_id})
+    return res['items']
+
 
 def get_participants(coll, event_id):
     res = coll.find_one({"id": event_id})

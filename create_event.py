@@ -45,9 +45,8 @@ def event_created(update: Update, context: CallbackContext):
     return GET_ITEMS
 
 
-def get_items(update: Update, context: CallbackContext):
+def insert_items(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
-    logger.info(f"> create event #{chat_id}")
     event_id = model.get_last_event(user_events_collection, chat_id)
     item = update.message.text
     model.add_items_to_event(events_collection, event_id, item)
@@ -66,7 +65,7 @@ create_event_handler = ConversationHandler(
     states={
         CREATION: [MessageHandler(Filters.text, create_event)],
         EVENT_CREATED: [MessageHandler(Filters.text, event_created)],
-        GET_ITEMS: [MessageHandler(Filters.text, get_items)],
+        GET_ITEMS: [MessageHandler(Filters.text, insert_items)],
     },
 
     fallbacks=[CommandHandler('cancel', cancel)]
