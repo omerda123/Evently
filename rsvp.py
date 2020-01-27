@@ -4,7 +4,6 @@ import telegram
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackContext, MessageHandler, \
     Filters, Updater, CallbackQueryHandler, ConversationHandler
-
 import secret
 
 logging.basicConfig(
