@@ -3,9 +3,13 @@ import uuid
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext, MessageHandler, \
     Filters, Updater, ConversationHandler
-
 import secrets
 import model
+
+DBNAME = "evently"
+
+events_collection = model.get_collection(DBNAME, "events")
+user_events_collection = model.get_collection(DBNAME, "user_events")
 
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -21,7 +25,7 @@ def start(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     logger.info(f"> Start chat #{chat_id}")
     if context.args:
-        my_event = model.get_event(context.args[0])
+        my_event = model.get_event(events_collection, context.args[0])
         context.bot.send_message(chat_id=chat_id,
                                  text=my_event["description"])
 
@@ -51,8 +55,10 @@ def event_created(update: Update, context: CallbackContext):
                              text=f""" Event created ! share the following message with your friends to RSVP You are invited to:
 if you want to tell your friend items to bring please write /add_list
 """)
-    context.bot.send_message(chat_id=chat_id,text = f"You are invited to {text} click here to RSVP:  t.me/event_handler_bot?start={event_id}")
-    model.add_event(event_id,text)
+    context.bot.send_message(chat_id=chat_id,
+                             text=f"You are invited to {text} click here to RSVP:  t.me/event_handler_bot?start={event_id}")
+    model.add_event(events_collection, event_id, text)
+    model.add_event_to_user(user_events_collection, chat_id, event_id)
     return ConversationHandler.END
 
 
@@ -69,6 +75,18 @@ def insert_items(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=chat_id,
                              text="""item inserted""")
     return GET_ITEMS
+
+
+def get_participants(update: Update, context: CallbackContext):
+    chat_id = update.effective_chat.id
+    logger.info(f"> create event #{chat_id}")
+    event_id = model.get_last_event(user_events_collection, chat_id)
+    participants = model.get_participants(events_collection, event_id)
+    if participants:
+        for participant in participants:
+            context.bot.send_message(chat_id=chat_id, text=f"{participant['name'] : participant['rsvp']} ")
+    else:
+        context.bot.send_message(chat_id=chat_id, text="No friends attend yet")
 
 
 def cancel(args):
@@ -117,6 +135,7 @@ dispatcher.add_handler(start_handler)
 dispatcher.add_handler(create_event_handler)
 dispatcher.add_handler(add_item_handler)
 dispatcher.add_handler(CommandHandler('event', event, pass_args=True))
+dispatcher.add_handler(CommandHandler('attend', get_participants))
 
 logger.info("* Start polling...")
 updater.start_polling()  # Starts polling in a background thread.
