@@ -19,15 +19,14 @@ def add_event(coll, event_id, text):
 
 def add_items_to_event(coll, event_id, item):
     coll.update_one({"id": event_id},
-                    {"$push": {'items': item}})
+                    {"$push": {'items': item}}
+                    , upsert=True)
 
 
 def add_event_to_user(coll, user_id, event_id):
-    coll.update_one({},
-                    {"$set":
-                         {"user_id": user_id,
-                          "event_id": event_id
-                          }}, upsert=True)
+    coll.insert_one({"user_id": user_id,
+                     "event_id": event_id
+                     })
 
 
 def get_event(coll, event_id):

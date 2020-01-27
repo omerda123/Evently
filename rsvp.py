@@ -90,13 +90,3 @@ conv_handler = ConversationHandler(
             },
     fallbacks=[CommandHandler('cancel', cancel)]
 )
-dispatcher.add_handler(CommandHandler('cancel', cancel))
-
-dispatcher.add_handler(conv_handler)
-
-echo_handler = MessageHandler(Filters.text, respond)
-dispatcher.add_handler(echo_handler)
-logger.info("* Start polling...")
-updater.start_polling()  # Starts polling in a background thread.
-updater.idle()  # Wait until Ctrl+C is pressed
-logger.info("* Bye!")
