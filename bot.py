@@ -52,6 +52,14 @@ def event(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=chat_id, text=context.args[0])
 
 
+def print_items(update: Update, context: CallbackContext):
+    chat_id = update.effective_chat.id
+    event_id = model.get_last_event(user_events_collection, chat_id)
+    items = model.get_items(events_collection, event_id)
+    for item in items:
+        context.bot.send_message(chat_id=chat_id, text=f"{item} : ")
+
+
 conv_handler = ConversationHandler(
     entry_points=[CommandHandler('start', start)],
 
@@ -67,16 +75,7 @@ conv_handler = ConversationHandler(
 dispatcher.add_handler(create_event.create_event_handler)
 dispatcher.add_handler(CommandHandler('attending', get_participants))
 dispatcher.add_handler(CommandHandler('create_event', create_event))
-
-
-def print_items(update: Update, context: CallbackContext):
-    chat_id = update.effective_chat.id
-    event_id = model.get_last_event(user_events_collection, chat_id)
-    items = model.get_items(events_collection, event_id)
-    for item in items:
-        context.bot.send_message(chat_id=chat_id, text=f"{item} : ")
-
-
+# dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('items', print_items))
 dispatcher.add_handler(conv_handler)
 
