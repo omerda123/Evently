@@ -1,10 +1,11 @@
 import logging
-
+import uuid
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext, MessageHandler, \
     Filters, Updater, ConversationHandler
 
 import secrets
+import model
 
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -22,11 +23,15 @@ def extract_unique_code(text):
 
 
 def start(update: Update, context: CallbackContext):
+    chat_id = update.effective_chat.id
+    logger.info(f"> Start chat #{chat_id}")
     if context.args:
-        print(context.args)
+        my_event = model.get_event(context.args[0])
+        context.bot.send_message(chat_id=chat_id,
+                                 text=my_event["description"])
+
     else:
-        chat_id = update.effective_chat.id
-        logger.info(f"> Start chat #{chat_id}")
+
         context.bot.send_message(chat_id=chat_id,
                                  text=""" Welcome! 💣
             Hi, to create a event please type /create_event
@@ -46,13 +51,15 @@ def event_created(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     logger.info(f"> create event #{chat_id}")
     text = update.message.text
+    event_id = str(uuid.uuid1())
     context.bot.send_message(chat_id=chat_id,
-                             text=""" Event created ! share the following message with your friends to RSVP You are invited to:
-Joe's birthday picnic 2/2/2020, 17:00, Jabotinsky 25 Tel Aviv you can park at Arlozorov parking
-click here to RSVP:  t.me/event_handler_bot?event=123
+                             text=f""" Event created ! share the following message with your friends to RSVP You are invited to:
+{text}
+click here to RSVP:  t.me/event_handler_bot?start={event_id}
 if you want to tell your friend items to bring please write /add_list
 """)
 
+    model.add_event(event_id,text)
     return ConversationHandler.END
 
 
