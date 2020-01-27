@@ -22,6 +22,7 @@ def cancel(update: Update, context: CallbackContext):
 
 
 def start(update: Update, context: CallbackContext):
+    print(context.args)
     keyboard = [[InlineKeyboardButton("not this time", callback_data='0')],
                 [InlineKeyboardButton("1", callback_data='1')],
                 [InlineKeyboardButton("2", callback_data='2')],
