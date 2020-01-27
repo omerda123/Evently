@@ -9,8 +9,9 @@ def get_collection(dbname, coll):
     return coll
 
 
-def add_event(coll, event_id, text):
+def add_event(coll, event_id, text, name):
     coll.insert_one({"id": event_id,
+                     "name": name,
                      "description": text,
                      "participants": [],
                      "items": []

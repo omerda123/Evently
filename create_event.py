@@ -37,7 +37,9 @@ def event_created(update: Update, context: CallbackContext):
                              text=f"You are invited to {text} click here to RSVP:  t.me/event_handler_bot?start={event_id}")
     context.bot.send_message(chat_id=chat_id,
                              text="if you want to tell your friend to bring items to your party!")
-    model.add_event(events_collection, event_id, text)
+    print(update.effective_chat)
+    name = f"{update.effective_chat['first_name']} {update.effective_chat['last_name']}"
+    model.add_event(events_collection, event_id, text, name)
     model.add_event_to_user(user_events_collection, chat_id, event_id)
     return GET_ITEMS
 

@@ -1,7 +1,7 @@
 import logging
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext, MessageHandler, \
-    Filters, Updater, ConversationHandler
+    Filters, Updater, ConversationHandler, CallbackQueryHandler
 import secrets
 import model
 import rsvp
@@ -10,7 +10,6 @@ import create_event
 DBNAME = "evently"
 events_collection = model.get_collection(DBNAME, "events")
 user_events_collection = model.get_collection(DBNAME, "user_events")
-
 
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -26,12 +25,10 @@ def start(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     logger.info(f"> Start chat #{chat_id}")
     if context.args:
-        rsvp.start(update, context)
+        return rsvp.start(update, context)
 
     else:
         create_event.start(update, context)
-
-
 
 
 def get_participants(update: Update, context: CallbackContext):
@@ -55,14 +52,22 @@ def event(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     context.bot.send_message(chat_id=chat_id, text=context.args[0])
 
-    # for arg in args:
 
+conv_handler = ConversationHandler(
+    entry_points=[CommandHandler('start', start)],
 
-start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
+    states={
+        rsvp.COMING_OR_NOT: [CallbackQueryHandler(rsvp.coming_or_not)],
+        rsvp.WHAT_TO_BRING: [CallbackQueryHandler(rsvp.what_to_bring)],
+        rsvp.FINISH: [CallbackQueryHandler(rsvp.finish)],
+
+    },
+    fallbacks=[CommandHandler('cancel', cancel)]
+)
+
 dispatcher.add_handler(create_event.create_event_handler)
 dispatcher.add_handler(CommandHandler('attend', get_participants))
-dispatcher.add_handler(rsvp.conv_handler)
+dispatcher.add_handler(conv_handler)
 
 logger.info("* Start polling...")
 updater.start_polling()  # Starts polling in a background thread.

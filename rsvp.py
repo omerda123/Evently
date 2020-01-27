@@ -6,6 +6,7 @@ from telegram.ext import CommandHandler, CallbackContext, MessageHandler, \
     Filters, Updater, CallbackQueryHandler, ConversationHandler
 
 import secret
+COMING_OR_NOT, WHAT_TO_BRING, FINISH = range(3)
 
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -39,7 +40,6 @@ def start(update: Update, context: CallbackContext):
     return COMING_OR_NOT
 
 
-COMING_OR_NOT, WHAT_TO_BRING, FINISH = range(3)
 list_of_stuff = ['bisly', 'cake', 'beer']
 
 
@@ -62,7 +62,7 @@ def coming_or_not(update: Update, context: CallbackContext):
 
 
 def what_to_bring(update, context):
-    user_id = update.effective_chat.ide
+    user_id = update.effective_chat.id
     what_user_bring = update.callback_query
     print(what_user_bring.data)
     print(user_id)
@@ -80,14 +80,3 @@ def respond(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.message.chat_id, text=response)
 
 
-conv_handler = ConversationHandler(
-    entry_points=[CommandHandler('start', start)],
-
-    states={
-        COMING_OR_NOT: [CallbackQueryHandler(coming_or_not)],
-        WHAT_TO_BRING: [CallbackQueryHandler(what_to_bring)],
-        FINISH: [CallbackQueryHandler(finish)],
-
-            },
-    fallbacks=[CommandHandler('cancel', cancel)]
-)
