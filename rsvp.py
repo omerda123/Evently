@@ -61,7 +61,7 @@ def coming_or_not(update: Update, context: CallbackContext):
 
 
 def what_to_bring(update, context):
-    user_id = update.effective_chat.id
+    user_id = update.effective_chat.ide
     what_user_bring = update.callback_query
     print(what_user_bring.data)
     print(user_id)
