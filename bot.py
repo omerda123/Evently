@@ -65,7 +65,7 @@ conv_handler = ConversationHandler(
 )
 
 dispatcher.add_handler(create_event.create_event_handler)
-dispatcher.add_handler(CommandHandler('attend', get_participants))
+dispatcher.add_handler(CommandHandler('attending', get_participants))
 dispatcher.add_handler(conv_handler)
 
 logger.info("* Start polling...")
