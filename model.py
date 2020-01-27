@@ -52,7 +52,7 @@ def rsvp(coll, event_id, user_id, name, num_of_participants, brings):
                             "user_id": user_id,
                             "name": name,
                             "rsvp": num_of_participants,
-                            "brings": brings
+                            "brings": []
                         }
                     }
                     })
