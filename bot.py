@@ -49,11 +49,9 @@ def event_created(update: Update, context: CallbackContext):
     event_id = str(uuid.uuid1())
     context.bot.send_message(chat_id=chat_id,
                              text=f""" Event created ! share the following message with your friends to RSVP You are invited to:
-{text}
-click here to RSVP:  t.me/event_handler_bot?start={event_id}
 if you want to tell your friend items to bring please write /add_list
 """)
-
+    context.bot.send_message(chat_id=chat_id,text = f"You are invited to {text} click here to RSVP:  t.me/event_handler_bot?start={event_id}")
     model.add_event(event_id,text)
     return ConversationHandler.END
 
