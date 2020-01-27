@@ -1,16 +1,17 @@
 # Evently
-<https://t.me/{BOT_ID}>
+<https://t.me/event_handler_bot>
 
-{ONE LINE BOT DESCRIPTION HERE} 
+Evently is going to help you manage your events!!!
+
 
 * Omer Daniel
 * Gal Hadad
 
-{OPTIONAL: MORE PROJECT INFO HERE}
+you can create your event, ask your friends items to bring with them and let the bot ask your friends for ascendancy. 
 
 ## Screenshots
 
-![SCREESHOT DECSRIPTION](screenshots/shopping-list-bot-1.png)
+![SCREESHOT DECSRIPTION](screenshots/evently.png)
 
 ## How to Run This Bot
 ### Prerequisites

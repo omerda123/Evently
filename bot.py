@@ -66,7 +66,7 @@ conv_handler = ConversationHandler(
 
 dispatcher.add_handler(create_event.create_event_handler)
 dispatcher.add_handler(CommandHandler('attending', get_participants))
-dispatcher.add_handler(CommandHandler('create_event', start))
+dispatcher.add_handler(CommandHandler('create_event', create_event))
 
 
 def print_items(update: Update, context: CallbackContext):
