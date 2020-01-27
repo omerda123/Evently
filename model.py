@@ -14,8 +14,14 @@ def add_event(coll, event_id, text):
                     {"$set":
                          {"id": event_id,
                           "description": text,
-                          "participants": []
+                          "participants": [],
+                          "items": []
                           }}, upsert=True)
+
+
+def add_items_to_event(coll, event_id, item):
+    coll.update_one({"id": event_id},
+                    {"$push": {'items': item}})
 
 
 def add_event_to_user(coll, user_id, event_id):
@@ -39,7 +45,6 @@ def get_last_event(coll, user_id):
 def get_participants(coll, event_id):
     res = coll.find_one({"id": event_id})
     return res['participants']
-
 
 
 def rsvp(coll, event_id, user_id, name, num_of_participants, brings):
