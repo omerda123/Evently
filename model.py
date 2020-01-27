@@ -24,8 +24,6 @@ def add_items_to_event(coll, event_id, item):
                     , upsert=True)
 
 
-
-
 def add_event_to_user(coll, user_id, event_id):
     coll.update_one({"user_id": user_id},
                     {"$set": {"event_id": event_id}
@@ -44,7 +42,7 @@ def get_last_event(coll, user_id):
 
 def get_items(coll, event_id):
     res = coll.find_one({"id": event_id})
-    return res['items']
+    return [res['participants'] , res['items']]
 
 
 def get_participants(coll, event_id):
@@ -73,5 +71,3 @@ def friend_brings_item(coll, event_id, user_id, item):
     res['items'].remove(item)
     coll.replace_one({"id": event_id}, res)
 
-
-    # coll.update_one({"id": event_id}, res)

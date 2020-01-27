@@ -38,7 +38,7 @@ def get_participants(update: Update, context: CallbackContext):
     participants = model.get_participants(events_collection, event_id)
     if participants:
         for participant in participants:
-            context.bot.send_message(chat_id=chat_id, text=f"{participant['name'] : participant['rsvp']} ")
+            context.bot.send_message(chat_id=chat_id, text=f"{participant['name']} : {participant['rsvp']} ")
     else:
         context.bot.send_message(chat_id=chat_id, text="No friends attend yet")
 
@@ -56,8 +56,11 @@ def print_items(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     event_id = model.get_last_event(user_events_collection, chat_id)
     items = model.get_items(events_collection, event_id)
-    for item in items:
-        context.bot.send_message(chat_id=chat_id, text=f"{item} : ")
+    for participant in items[0]:
+        for item in participant['brings']:
+            context.bot.send_message(chat_id=chat_id, text=f"{item} : {participant['name']} ")
+    for item in items[1]:
+        context.bot.send_message(chat_id=chat_id, text=f"{item} : no one ")
 
 
 conv_handler = ConversationHandler(
