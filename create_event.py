@@ -16,7 +16,7 @@ def start(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=chat_id,
                              text=f"""Hello {update.effective_user.first_name + ' ' + update.effective_user.last_name} !!!!!
 EVENTLY is going to help you manage your event!!!
-        ✔ to create a event please type /create_event
+        ✔ to create an event please type /create_event
         ✔ to see who is attending type /attending
         ✔ to see who brings what type /items""")
 
@@ -56,6 +56,7 @@ def insert_items(update: Update, context: CallbackContext):
 
 def cancel(args):
     pass
+
 
 
 create_event_handler = ConversationHandler(

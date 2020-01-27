@@ -63,6 +63,15 @@ def print_items(update: Update, context: CallbackContext):
         context.bot.send_message(chat_id=chat_id, text=f"{item} : no one ")
 
 
+def help(update: Update, context: CallbackContext):
+    chat_id = update.effective_chat.id
+    context.bot.send_message(chat_id=chat_id,
+                             text="""
+✔ to create an event please type /create_event
+✔ to see who is attending type /attending
+✔ to see who brings what type /items""")
+
+
 conv_handler = ConversationHandler(
     entry_points=[CommandHandler('start', start)],
 
@@ -78,8 +87,8 @@ conv_handler = ConversationHandler(
 dispatcher.add_handler(create_event.create_event_handler)
 dispatcher.add_handler(CommandHandler('attending', get_participants))
 dispatcher.add_handler(CommandHandler('create_event', create_event))
-# dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('items', print_items))
+dispatcher.add_handler(CommandHandler('help', help))
 dispatcher.add_handler(conv_handler)
 
 logger.info("* Start polling...")
