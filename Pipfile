@@ -9,6 +9,7 @@ ipython = "*"
 
 [packages]
 python-telegram-bot = "*"
+pymongo = "*"
 
 [requires]
 python_version = "3.7"
