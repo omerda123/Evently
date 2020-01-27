@@ -17,11 +17,6 @@ updater = Updater(token=secrets.BOT_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
 
-def extract_unique_code(text):
-    # Extracts the unique_code from the sent /start command.
-    return text.split()[1] if len(text.split()) > 1 else None
-
-
 def start(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     logger.info(f"> Start chat #{chat_id}")
