@@ -10,7 +10,6 @@ import create_event
 DBNAME = "evently"
 events_collection = model.get_collection(DBNAME, "events")
 user_events_collection = model.get_collection(DBNAME, "user_events")
-
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
     level=logging.INFO)
@@ -24,6 +23,7 @@ dispatcher = updater.dispatcher
 def start(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     logger.info(f"> Start chat #{chat_id}")
+
     if context.args:
         return rsvp.start(update, context)
 
