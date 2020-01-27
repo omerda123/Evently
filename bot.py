@@ -25,13 +25,12 @@ dispatcher = updater.dispatcher
 def start(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     logger.info(f"> Start chat #{chat_id}")
+
     if context.args:
         rsvp.start(update, context)
 
     else:
         create_event.start(update, context)
-
-
 
 
 def get_participants(update: Update, context: CallbackContext):
