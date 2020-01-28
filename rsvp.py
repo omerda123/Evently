@@ -100,9 +100,10 @@ def summery_message(update: Update, context: CallbackContext):
     print(guest_info['brings'])
     print_items = '\n'
     for item in guest_info['brings']:
-        print_items += item + '\n'
-    final_message = 'thank for attending my event {},you arrive as:{} people\ndont forget to brings:{}\nsee you soon!!!'.format(name,
-                                                                       guest_info['num_of_participants'], print_items)
+        if guest_info['user_id'] == chat_id:
+            print_items += item + '\n'
+    final_message = 'thank for attending my event {},you arrive as:{} people\ndont forget to brings:{}\nsee you soon!!!'. format(name,
+                                                          guest_info['num_of_participants'], print_items)
     context.bot.send_message(chat_id=chat_id, text=final_message)
     return FINISH
 
