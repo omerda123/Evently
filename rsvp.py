@@ -62,6 +62,7 @@ def coming_or_not(update: Update, context: CallbackContext):
     coming_message = "see you soon {}, you will arrive as:{} people\n what would like to bring?".format(name, guest_info['num_of_participants'])
     if guest_info['num_of_participants'] == '0':
         context.bot.send_message(chat_id=chat_id, text=goodbye_message)
+        return FINISH
     else:
         for item in list_of_stuff:
             keyboard.append([InlineKeyboardButton(item, callback_data=item)])
@@ -79,7 +80,7 @@ def what_to_bring(update: Update, context: CallbackContext):
     guest_info['brings'].append(query.data)
     list_of_stuff = model.get_event(events_collection, event_id['id'])['items']
     print(list_of_stuff)
-    if guest_info['brings'] != 'no':
+    while guest_info['brings'] != 'no':
         keyboard = [[InlineKeyboardButton("no thanks, it enough", callback_data=' ')]]
         for item in list_of_stuff:
             keyboard.append([InlineKeyboardButton(item, callback_data=item)])
