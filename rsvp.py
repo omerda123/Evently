@@ -94,7 +94,8 @@ def summery_message(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     coll = model.get_collection(DBNAME, 'events')
     query = update.callback_query
-    model.friend_brings_item(coll, event_id['id'], chat_id, query.data)
+    if query.data != ' ':
+        model.friend_brings_item(coll, event_id['id'], chat_id, query.data)
     guest_info['brings'].append(query.data)
     print(guest_info['brings'])
     print_items = '\n'

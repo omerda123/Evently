@@ -11,7 +11,7 @@ you can create your event, ask your friends items to bring with them and let the
 
 ## Screenshots
 
-![SCREESHOT DECSRIPTION](screenshots/evently.png)
+![creating an event](screenshots/evently.png)
 
 1. search for EVENTLY in the search bar 
 2. enter the commend /create_event in order to create new event
@@ -34,9 +34,9 @@ enter the comment /{}
 * Clone this repo from github
 * Install dependencies: `pipenv install`
 * Get a BOT ID from the [botfather](https://telegram.me/BotFather).
-* Create a `secrets.py` file:
+* change `secrets.example` to `secrets.py` and edit your bot token provided by botfather
 
-        BOT_TOKEN = "your-bot-token-here"
+
 
 ### Run
 To run the bot use:
@@ -53,8 +53,13 @@ To run all test  use:
     pipenv run pytest
 
 (Or just `pytest` if running in a pipenv shell.)
+Please make sure all tests are passing: 
+![Running a tests](screenshots/tests.png)
+
 
 ## Credits and References
 * [Telegram Docs](https://core.telegram.org/bots)
 * [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
-* {ADD MORE REFERENCES TO LIBRARIES, APIS AND CODE SNIPPETS HERE}
+* MongoDB docs
+* StackOverflow 
+* Udi, Yaniv and Eran
