@@ -100,9 +100,12 @@ def summery_message(update: Update, context: CallbackContext):
     guest_info['brings'].append(query.data)
     print(guest_info['brings'])
     print_items = '\n'
-    for item in guest_info['brings']:
-        if guest_info['user_id'] == chat_id:
-            print_items += item + '\n'
+    participants_items = model.get_items(coll,event_id['id'])
+    for participant in participants_items[0]:
+        if participant['user_id'] == chat_id:
+            for item in participant['brings']:
+                print_items += item + '\n'
+
     final_message = 'thank for attending my event {},you arrive as:{} people\ndont forget to brings:{}\nsee you soon!!!'. format(name,
                                                           guest_info['num_of_participants'], print_items)
     context.bot.send_message(chat_id=chat_id, text=final_message)
