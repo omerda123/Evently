@@ -64,7 +64,6 @@ def coming_or_not(update: Update, context: CallbackContext):
                                                                                                             'num_of_participants'])
     if guest_info['num_of_participants'] == '0':
         context.bot.send_message(chat_id=chat_id, text=goodbye_message)
-        return FINISH
     else:
         for item in list_of_stuff:
             keyboard.append([InlineKeyboardButton(item, callback_data=item)])
