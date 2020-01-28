@@ -13,7 +13,18 @@ you can create your event, ask your friends items to bring with them and let the
 
 ![SCREESHOT DECSRIPTION](screenshots/evently.png)
 
-## How to Run This Bot
+1. search for EVENTLY in the search bar 
+2. enter the commend /create_event in order to create new event
+3. give a description to your event --> your friend you see this description when they click the link
+after you enter a description you will get a link--> this link is the invitation
+4. if you would like that people will brings something now it the time to enter the stuff you need
+(press enter after each item)
+5. share the link (3) with your friend (the one you want to invite)
+6. in order to get info who is coming (in other words, how many friends do you have):
+enter the comment /{}
+
+
+
 ### Prerequisites
 * Python 3.7 or 3.8
 * pipenv
