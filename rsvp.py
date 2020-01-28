@@ -80,8 +80,8 @@ def what_to_bring(update: Update, context: CallbackContext):
     guest_info['brings'].append(query.data)
     list_of_stuff = model.get_event(events_collection, event_id['id'])['items']
     print(list_of_stuff)
-    while guest_info['brings'] != 'no':
-        keyboard = [[InlineKeyboardButton("no thanks, it enough", callback_data='no_secound')]]
+    if guest_info['brings'] != 'no':
+        keyboard = [[InlineKeyboardButton("no thanks, it enough", callback_data=' ')]]
         for item in list_of_stuff:
             keyboard.append([InlineKeyboardButton(item, callback_data=item)])
         next_message = 'you choose to brings {}, do you want to bring another things?'.format(query.data)
@@ -95,7 +95,7 @@ def summery_message(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     coll = model.get_collection(DBNAME, 'events')
     query = update.callback_query
-    while query.data != 'no_secound':
+    if query.data != ' ':
         model.friend_brings_item(coll, event_id['id'], chat_id, query.data)
     guest_info['brings'].append(query.data)
     print(guest_info['brings'])
