@@ -4,14 +4,15 @@ import telegram
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackContext, MessageHandler, \
     Filters, Updater, CallbackQueryHandler, ConversationHandler
-import secrets
 import model
 DBNAME = "evently"
+import secrets
 
 event_id = {"id": ""}
-guest_info = {}
+guest_info = {"brings": []}
 
-COMING_OR_NOT, WHAT_TO_BRING, FINISH = range(3)
+
+COMING_OR_NOT, WHAT_TO_BRING,SUMMERY, FINISH = range(4)
 
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -30,7 +31,6 @@ def cancel(update: Update, context: CallbackContext):
 
 
 def start(update: Update, context: CallbackContext):
-
     print(context.args)
     event_id['id'] = context.args[0]
     info_about_event = model.get_event(events_collection, event_id['id'])
@@ -44,45 +44,66 @@ def start(update: Update, context: CallbackContext):
     user_name = update.message.from_user.first_name
     chat_id = update.effective_chat.id
     logger.info(f"> Start chat #{chat_id}")
-    welcome_message = 'Hi, {} {} wants to know if you attend:{}'.format(user_name, info_about_event['name'], info_about_event['description'])
+    welcome_message = 'Hi, {} {} wants to know if you attend:{}'.format(user_name, info_about_event['name'],
+                                                                        info_about_event['description'])
     update.message.reply_text(welcome_message, reply_markup=reply_markup)
     return COMING_OR_NOT
 
 
 def coming_or_not(update: Update, context: CallbackContext):
-    print(event_id['id'])
-    info_about_event = model.get_event(events_collection, event_id['id'])
-    list_of_stuff = info_about_event['items']
-    print("Hello")
-    query = update.callback_query
-    guest_info['num_of_participants'] = query.data
     chat_id = update.effective_chat.id
     name = update.effective_user.first_name
-    goodbye_massege = 'sorry to here your not coming {}, hope i see you soon'.format(name)
-    coming_massege = "see you soon {}, you will arrive as:{} pepole\n what would like to bring?".format(name, guest_info['num_of_participants'])
-    if query.data == '0':
-        context.bot.send_message(chat_id=chat_id, text=goodbye_massege)
+    coll = model.get_collection(DBNAME, 'events')
+    list_of_stuff = model.get_event(events_collection, event_id['id'])['items']  # get list of things left to brings
+    guest_info['num_of_participants'] = update.callback_query.data   # how many people will arrive
+    keyboard = [[InlineKeyboardButton("i don't want to bring anything, thanks", callback_data='no')]]
+    model.rsvp(coll, event_id['id'], chat_id, name, guest_info['num_of_participants'])   # update the list of people
+    goodbye_message = 'sorry to here your not coming {}, hope i see you soon'.format(name)
+    coming_message = "see you soon {}, you will arrive as:{} people\n what would like to bring?".format(name, guest_info['num_of_participants'])
+    if guest_info['num_of_participants'] == '0':
+        context.bot.send_message(chat_id=chat_id, text=goodbye_message)
     else:
-        keyboard = [[InlineKeyboardButton("i dont want to bring anything, thanks", callback_data='no')]]
         for item in list_of_stuff:
-            print('hi')
             keyboard.append([InlineKeyboardButton(item, callback_data=item)])
-        context.bot.send_message(chat_id=chat_id, reply_markup=InlineKeyboardMarkup(keyboard), text=coming_massege)
-        if guest_info['brings'] != 'no':
-            next_massege = 'you choose to brings {}, do you want to bring another things?'.format(guest_info['brings'])
-            context.bot.send_message(chat_id=chat_id, reply_markup=InlineKeyboardMarkup(keyboard), text=next_massege)
+        context.bot.send_message(chat_id=chat_id, reply_markup=InlineKeyboardMarkup(keyboard), text=coming_message)
+        print(list_of_stuff)
         return WHAT_TO_BRING
 
 
 def what_to_bring(update: Update, context: CallbackContext):
-    name = update.effective_user.first_name
-    user_id = update.effective_chat.id
-    query = update.callback_query
-    guest_info['brings'] = query.data
-    print(guest_info['num_of_participants'])
-    coll = model.get_collection(DBNAME, 'events')
     print(guest_info['brings'])
-    model.rsvp(coll, event_id['id'], user_id, name, guest_info['num_of_participants'], guest_info['brings'])
+    user_id = update.effective_chat.id
+    coll = model.get_collection(DBNAME, 'events')
+    query = update.callback_query    # what he brings
+    model.friend_brings_item(coll, event_id['id'], user_id, query.data)
+    guest_info['brings'].append(query.data)
+    list_of_stuff = model.get_event(events_collection, event_id['id'])['items']
+    print(list_of_stuff)
+    if guest_info['brings'] != 'no':
+        keyboard = [[InlineKeyboardButton("no thanks, it enough", callback_data=' ')]]
+        for item in list_of_stuff:
+            keyboard.append([InlineKeyboardButton(item, callback_data=item)])
+        next_message = 'you choose to brings {}, do you want to bring another things?'.format(query.data)
+        context.bot.send_message(chat_id=user_id, reply_markup=InlineKeyboardMarkup(keyboard), text=next_message)
+    return SUMMERY
+    print(list_of_stuff)
+
+
+def summery_message(update: Update, context: CallbackContext):
+    name = update.effective_user.first_name
+    chat_id = update.effective_chat.id
+    coll = model.get_collection(DBNAME, 'events')
+    query = update.callback_query
+    model.friend_brings_item(coll, event_id['id'], chat_id, query.data)
+    guest_info['brings'].append(query.data)
+    print(guest_info['brings'])
+    print_items = '\n'
+    for item in guest_info['brings']:
+        print_items += item + '\n'
+    final_message = 'thank for attending my event {},you arrive as:{} people\ndont forget to brings:{}\nsee tiy soon!!!'.format(name,
+                                                                       guest_info['num_of_participants'], print_items)
+    context.bot.send_message(chat_id=chat_id, text=final_message)
+    return FINISH
 
 
 def finish():
@@ -95,5 +116,3 @@ def respond(update: Update, context: CallbackContext):
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
     response = update.message.from_user.first_name
     context.bot.send_message(chat_id=update.message.chat_id, text=response)
-
-
