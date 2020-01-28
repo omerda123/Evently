@@ -21,8 +21,7 @@ after you enter a description you will get a link--> this link is the invitation
 (press enter after each item)
 5. share the link (3) with your friend (the one you want to invite)
 6. in order to get info who is coming (in other words, how many friends do you have):
-enter the comment /{}
-
+enter the comment /attending
 
 
 ### Prerequisites
