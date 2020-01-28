@@ -60,6 +60,6 @@ Please make sure all tests are passing:
 ## Credits and References
 * [Telegram Docs](https://core.telegram.org/bots)
 * [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
-* MongoDB docs
-* StackOverflow 
+* [MongoDB docs](https://docs.mongodb.com/)
+* [StackOverflow](https://stackoverflow.com/) 
 * Udi, Yaniv and Eran
